@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>JKT48 RH2026 · Setlist Survey</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0A0808;color:#F9FAFB;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh}
+.wrap{max-width:600px;margin:0 auto;padding:16px}
+
+/* hero */
+.hero{background:#1C0D12;border:1px solid #3D1A26;border-radius:12px;padding:22px 18px;margin-bottom:12px}
+.badge{display:inline-block;background:#B0143C;color:#FFF;font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+.hero h1{font-size:20px;font-weight:700;margin:4px 0 4px;color:#F9FAFB}
+.hero .accent{font-size:13px;font-weight:600;color:#B0143C;margin:0 0 10px}
+.hero p{font-size:12px;color:#9CA3AF;line-height:1.65;margin:0 0 16px}
+.hero-btns{display:flex;gap:8px;flex-wrap:wrap}
+
+/* buttons */
+.btn-red{background:#B0143C;color:#FFF;border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-red:disabled{opacity:0.5;cursor:not-allowed}
+.btn-ghost{background:transparent;color:#9CA3AF;border:1px solid #3D1A26;border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer}
+.btn-ghost:hover{border-color:#B0143C;color:#F9FAFB}
+.btn-sm{padding:6px 12px;font-size:11px;border-radius:6px}
+
+/* step bar */
+.step-bar{display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.step-dot{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.step-dot.done{background:#B0143C;border:1px solid #B0143C;color:#FFF}
+.step-dot.active{background:#B0143C66;border:1px solid #B0143C;color:#FFF}
+.step-dot.idle{background:#2A1520;border:1px solid #3D1A26;color:#9CA3AF}
+.step-label{font-size:11px;font-weight:600}
+.step-label.active{color:#F9FAFB}
+.step-label.idle{color:#9CA3AF}
+.step-line{flex:1;height:1px}
+.step-line.done{background:#B0143C}
+.step-line.idle{background:#3D1A26}
+
+/* section */
+.section{background:#1C0D12;border:1px solid #3D1A26;border-radius:12px;padding:16px 14px;margin-bottom:8px}
+.section h2{font-size:15px;font-weight:700;color:#F9FAFB;margin-bottom:2px}
+.section .sub{font-size:11px;color:#9CA3AF;margin-bottom:12px}
+.counter{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;margin-bottom:10px;border:1px solid}
+
+/* search */
+.search{background:#2A1520;border:1px solid #3D1A26;border-radius:8px;display:flex;align-items:center;padding:7px 10px;margin-bottom:8px}
+.search input{background:transparent;border:none;color:#F9FAFB;font-size:12px;flex:1;outline:none}
+.search input::placeholder{color:#6B7280}
+.search .clear{background:transparent;border:none;color:#9CA3AF;cursor:pointer;font-size:15px;padding:0;line-height:1}
+
+/* song list */
+.song-list{max-height:380px;overflow-y:auto;padding-right:2px}
+.song-card{display:flex;align-items:flex-start;gap:8px;background:#2A1520;border:1px solid #3D1A26;border-radius:7px;padding:9px 10px;margin-bottom:5px;cursor:pointer;transition:border-color 0.15s,background 0.15s}
+.song-card:hover{border-color:#6B2030}
+.song-card.sel-p{background:#B0143C18;border-color:#B0143C}
+.song-card.sel-h{background:#1E40AF18;border-color:#1E40AF}
+.song-num{font-size:10px;color:#9CA3AF;min-width:20px;padding-top:1px;text-align:right;font-weight:600;flex-shrink:0}
+.song-info{flex:1;min-width:0}
+.song-title{font-size:11px;font-weight:600;color:#F9FAFB;margin-bottom:2px;line-height:1.35}
+.song-mem{font-size:9.5px;color:#6B7280;line-height:1.35}
+.check{color:#B0143C;font-size:13px;flex-shrink:0;padding-top:1px}
+.check.h{color:#1E40AF}
+.disabled{opacity:0.4;pointer-events:none}
+.no-results{text-align:center;color:#9CA3AF;font-size:12px;padding:20px 0}
+
+/* footer nav */
+.footer{background:#0F0A0C;border-top:1px solid #3D1A26;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;bottom:0;border-radius:0 0 12px 12px;margin-top:6px}
+
+/* results */
+.stat-row{display:flex;gap:10px;margin-top:12px}
+.stat{background:#2A1520;border:1px solid #3D1A26;border-radius:8px;padding:10px 14px;flex:1;text-align:center}
+.stat-num{font-size:20px;font-weight:700}
+.stat-lbl{font-size:10px;color:#9CA3AF;margin-top:2px}
+.tab-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tab{padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;border-radius:7px;border:1px solid #3D1A26;background:transparent;color:#9CA3AF}
+.tab.active-p{border-color:#B0143C;background:#B0143C22;color:#B0143C}
+.tab.active-h{border-color:#1E40AF;background:#1E40AF22;color:#60A5FA}
+.tab.active-g{border-color:#7B2D8B;background:#7B2D8B22;color:#C084FC}
+.result-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;background:#1C0D12;border:1px solid transparent;margin-bottom:4px}
+.result-item.top3{background:#2A1520;border-color:#3D1A26}
+.rank{font-size:10px;font-weight:700;min-width:18px;text-align:center;flex-shrink:0}
+.rank.r1{color:#FFD700}
+.rank.r2{color:#C0C0C0}
+.rank.r3{color:#CD7F32}
+.rank.rn{color:#9CA3AF}
+.result-info{flex:1;min-width:0}
+.result-title{font-size:11px;font-weight:600;color:#F9FAFB;line-height:1.3;margin-bottom:1px}
+.result-mem{font-size:9px;color:#6B7280}
+.bar-wrap{min-width:80px;height:4px;background:#2A1520;border-radius:2px;overflow:hidden}
+.bar{height:100%;border-radius:2px;transition:width 0.4s ease}
+.pct{font-size:10px;color:#9CA3AF;min-width:32px;text-align:right}
+.cnt{font-size:9px;color:#6B7280}
+.gap-tag{font-size:10px;font-weight:700;color:#C084FC}
+.gap-detail{display:flex;gap:8px;margin-top:2px}
+.gap-pred{font-size:9px;color:#B0143C}
+.gap-harap{font-size:9px;color:#C084FC}
+.gap-desc{font-size:11px;color:#9CA3AF;margin-bottom:10px;line-height:1.5}
+
+/* notice */
+.notice{font-size:11px;color:#86EFAC;margin-top:10px}
+.footer-credit{font-size:10px;color:#6B7280;text-align:center;margin-top:10px}
+.footer-credit span{color:#B0143C}
+
+/* loading */
+.loading{display:flex;align-items:center;justify-content:center;min-height:200px;color:#9CA3AF;font-size:13px;gap:8px}
+.spinner{width:16px;height:16px;border:2px solid #3D1A26;border-top-color:#B0143C;border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* mobile */
+@media(max-width:480px){
+  .wrap{padding:10px}
+  .hero{padding:18px 14px}
+  .section{padding:14px 12px}
+  .song-list{max-height:320px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div class="loading"><div class="spinner"></div> Memuat…</div>
+</div>
+
+<script>
+const SONGS=[
+  {id:1,song:"Idol no Yoake / Fajar Sang Idola",members:"Group Song"},
+  {id:2,song:"Cosmos no Kioku / Ingatan Kosmos",members:"Group Song"},
+  {id:3,song:"Boku no Uchiage / Kembang Api Milikku",members:"Group Song"},
+  {id:4,song:"Tenshi No Shippo / Ekor Malaikat",members:"Gita Sekar Andarini, Gabriela Abigail, Nur Intan"},
+  {id:5,song:"Kikyou / Pulang Kampung",members:"Gita Sekar Andarini, Indah Cahya, Cornelia Vanisa"},
+  {id:6,song:"18nin Shimai no Uta / Lagu 18 Bersaudari",members:"Febriola Sinambela"},
+  {id:7,song:"Romance Kakurenbo",members:"Helisma Putri"},
+  {id:8,song:"Oshibe to Meshibe / Benang Sari, Putik, dan Kupu-Kupu Malam",members:"Abigail Rachel, Michelle Levia"},
+  {id:9,song:"Itoshiki Natasha / Natasha yang Ku Cinta",members:"Marsha Lenathea, Angelina Christy, Kathrina Irene"},
+  {id:10,song:"Mushi No Ballad / Balada Serangga",members:"Jesslyn Elly"},
+  {id:11,song:"Bird",members:"Jesslyn Elly, Aurellia, Nayla Suji"},
+  {id:12,song:"Yowamushi Kemushi / Si Ulat Penakut",members:"Greesella Adhalia"},
+  {id:13,song:"Junai No Crescendo / Cinta yang Tulus Crescendo",members:"Greesella Adhalia, Grace Octaviani, Michelle Alexandra"},
+  {id:14,song:"Blue Rose / Mawar Biru",members:"Adeline Wijaya, Oline Manuel, Catherina Vallencia, Ribka Budiman"},
+  {id:15,song:"Higurashi no Koi / Cinta Higurashi",members:"Nina Tutachia, Shabilqis Naila"},
+  {id:16,song:"Dakishimeraretara / Jika di Pelukmu",members:"Fiony Alveria, Cornelia Vanisa, Lulu Salsabila"},
+  {id:17,song:"Scandalous ni Ikou / Ayo Penuh Skandal",members:"Indah Cahya, Cornelia Vanisa"},
+  {id:18,song:"Ame No Pianist / Sang Pianis Hujan",members:"Alya Amanda, Celline Thefani, Cynthia Yaputera"},
+  {id:19,song:"Candy",members:"Anindya Ramadhani, Fritzy Rosmerian, Nur Intan"},
+  {id:20,song:"Avogado Janeeshi / Bukan Alpukat",members:"Cathleen Nixie, Michelle Alexandra"},
+  {id:21,song:"Omoide Ijou / Lebih Dari Memori",members:"Grace Octaviani, Dena Natalia, Desy Natalia"},
+  {id:22,song:"Renai Kinshi Jourei / Aturan Anti Cinta",members:"Aurhel Alana, Jazzlyn Trisha, Victoria Kimberly"},
+  {id:23,song:"Ookami To Pride / Serigala dan Pride",members:"Fritzy Rosmerian, Hillary Abigail"},
+  {id:24,song:"Plastic no Kuchibiru / Bibir dari Plastik",members:"Angelina Christy"},
+  {id:25,song:"Kita Berdua Jadian / Futari wa Dekiteru",members:"Jessica Chandra"},
+  {id:26,song:"Akai Pinheel to Professor / Pin Hell Merah dan Profesor",members:"Mutiara Azzahra"},
+  {id:27,song:"Yokaze No Shiwaza / Perbuatan Angin Malam",members:"Lulu Salsabila"},
+  {id:28,song:"Kuchi Utsushi no Chocolate / Berikan Coklat dengan Bibir",members:"Raisha Syifa, Adeline Wijaya, Cynthia Yaputera"},
+  {id:29,song:"Gesu no Yume / Mimpi yang Hina",members:"Dena Natalia, Desy Natalia"},
+  {id:30,song:"Hatsukoi Dorobou / Pencuri Cinta Pertama",members:"Jacqueline Immanuela, Jemima Ivodie, Nur Intan"},
+  {id:31,song:"Bokura no Eureka / Eureka Milik Kita New Era Ver.",members:"Michelle Levia"},
+  {id:32,song:"Kareha no Station / Stasiun Daun Kering",members:"Abigail Rachel"},
+  {id:33,song:"Hatsukoi yo Konnichiwa / Cinta Pertama, Selamat Siang",members:"Marsha Lenathea, Indah Cahya, Kathrina Irene"},
+  {id:34,song:"Return Match",members:"Angelina Christy, Greesella Adhalia, Kathrina Irene, Marsha Lenathea"},
+  {id:35,song:"Wink Wa 3Kai / Berkedip 3 Kali",members:"Astrella Virgiananda, Aulia Riza, Bong Aprilli, Hagia Sophia, Jacqueline Immanuela, Jemima Ivodie, Mikaela Kusjanto, Nur Intan, Humaira Ramadhani"},
+  {id:36,song:"Boku to Juliette to Jet Coaster / Aku, Juliette, dan Jet Coaster",members:"Shabilqis Naila, Cathleen Nixie, Cornelia Vanisa"},
+  {id:37,song:"Nusumareta Kuchibiru / Bibir yang Telah Dicuri",members:"Indah Cahya, Febriola Sinambela, Aurhel Alana, Grace Octaviani, Catherina Vallencia, Kathrina Irene, Cathleen Nixie, Greesela Adhalia, Helisma Putri, Gabriela Abigail, Adeline Wijaya, Astrella Virgiananda"},
+  {id:38,song:"Ue Kara Freyana / Dari Atas Freyana",members:"Freya Jayawardana"},
+  {id:39,song:"Sahabat atau Cinta",members:"Bong Aprilli, Mikaela Kusjanto"},
+  {id:40,song:"Bunga Matahari / Himawari",members:"Gabriela Abigail, Jesslyn Elly, Aurellia, Raisha Syifa"},
+  {id:41,song:"Oteage Lullaby / Lullaby Tanda Menyerah",members:"Freya Jayawardana"},
+  {id:42,song:"Kimi To Niji To Taiyou To / Bersama Kamu, Pelangi, dan Mentari",members:"Adeline Wijaya, Nina Tutachia, Oline Manuel, Shabilqis Naila, Aurhel Alana, Fritzy Rosmerian, Hillary Abigail, Nayla Suji, Jazzlyn Trisha, Abigail Rachel, Catherina Vallencia, Michelle Levia, Ribka Budiman, Victoria Kimberly"},
+  {id:43,song:"Wagamama na Nagareboshi / Si Bintang Jatuh yang Egois",members:"Indah Cahya, Ribka Budiman"},
+  {id:44,song:"Oshibe to Meshibe (New Era Ver.) / Benang Sari, Putik, dan Kupu-Kupu Malam",members:"Marsha Lenathea, Greesella Adhalia, Oline Manuel, Grace Octaviani, Aulia Riza"},
+  {id:45,song:"Suki! Suki! Skip! / Suka! Suka! Skip!",members:"Dena Natalia, Desy Natalia, Greesella Adhalia, Gendis Mayrannisa, Alya Amanda, Anindya Ramadhani, Cathleen Nixie, Celline Thefani, Cynthia Yaputera, Grace Octaviani, Michelle Alexandra"},
+  {id:46,song:"Nage Kiss de Uchi Otose! / Jatuhkan dengan Kiss-Bye!",members:"Freya Jayawardana, Angelina Christy, Mutiara Azzahra, Febriola Sinambela, Jessica Chandra, Helisma Putri"},
+  {id:47,song:"Shinkirou / Khayalan",members:"Gabriela Abigail, Lulu Salsabila"},
+  {id:48,song:"Menanti",members:"Cathleen Nixie"},
+  {id:49,song:"Heart Gata Virus / Virus Tipe Hati",members:"Hagia Sophia, Humaira Ramadhani, Astrella Virgiananda"},
+  {id:50,song:"Dua Orang yang Terlarang / Kinjirareta Futari",members:"Catherina Vallencia, Oline Manuel"},
+  {id:51,song:"12 Seconds / 12Byou",members:"Fiony Alveria, Indah Cahya, Aurellia, Alya Amanda, Anindya Ramadhani, Cathleen Nixie, Celline Thefani, Cynthia Yaputera, Grace Octaviani, Michelle Alexandra, Aurhel Alana, Jazzlyn Trisha, Fritzy Rosmerian, Hillary Abigail, Nayla Suji"},
+  {id:52,song:"Hubungan Kau Dan Aku / Kimi to Boku no Kankei",members:"Celine Thefani"},
+];
+
+const MAX_P=10, MAX_H=3;
+let st={step:'intro',vStep:0,P:new Set(),H:new Set(),results:null,loading:false,vid:null,voted:false,tab:'p',q:''};
+
+const e=(id)=>document.getElementById(id);
+const esc=(s)=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
+
+async function api(path,opts){
+  const r=await fetch(path,opts);
+  if(!r.ok)throw new Error('API error');
+  return r.json();
+}
+
+async function init(){
+  st.vid=localStorage.getItem('rh2026_vid')||null;
+  if(!st.vid){st.vid=uid();localStorage.setItem('rh2026_vid',st.vid);}
+  try{
+    const c=await api(`/api/check/${st.vid}`);
+    if(c.voted){
+      st.voted=true;
+      const r=await api('/api/results');
+      st.results=r; st.step='results';
+    }
+  }catch{}
+  render();
+}
+
+function filtered(){
+  const q=st.q.toLowerCase();
+  return q?SONGS.filter(s=>s.song.toLowerCase().includes(q)||s.members.toLowerCase().includes(q)):SONGS;
+}
+
+function toggle(set,id,max){
+  const n=new Set(set);
+  if(n.has(id))n.delete(id);
+  else if(n.size<max)n.add(id);
+  return n;
+}
+
+async function submitVote(){
+  st.loading=true; render();
+  try{
+    const r=await api('/api/vote',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({vid:st.vid,p:[...st.P],h:[...st.H]})
+    });
+    st.results=r.results||await api('/api/results');
+    st.voted=true; st.step='results';
+  }catch(err){alert('Gagal submit. Coba lagi.');}
+  st.loading=false; render();
+}
+
+async function loadResults(){
+  st.loading=true; render();
+  try{st.results=await api('/api/results');}catch{}
+  st.step='results'; st.loading=false; render();
+}
+
+// ---- render ----
+function renderStepBar(vs){
+  const steps=['Prediksi','Harapan'];
+  return `<div class="step-bar">${steps.map((l,i)=>`
+    <div class="step-dot ${vs>i?'done':vs===i?'active':'idle'}">${i+1}</div>
+    <span class="step-label ${vs>=i?'active':'idle'}">${l}</span>
+    ${i<steps.length-1?`<div class="step-line ${vs>i?'done':'idle'}"></div>`:''}
+  `).join('')}</div>`;
+}
+
+function renderSongList(selClass,selSet,maxVal){
+  const songs=filtered();
+  if(!songs.length)return`<div class="no-results">Tidak ada hasil</div>`;
+  return songs.map(s=>{
+    const sel=selSet.has(s.id);
+    const dis=!sel&&selSet.size>=maxVal;
+    return`<div class="song-card ${sel?selClass:''} ${dis?'disabled':''}" onclick="handleToggle(${s.id})">
+      <span class="song-num">${s.id}</span>
+      <div class="song-info">
+        <div class="song-title">${esc(s.song)}</div>
+        <div class="song-mem">${esc(s.members)}</div>
+      </div>
+      ${sel?`<span class="check ${selClass==='sel-h'?'h':''}">✓</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderResults(tab,results){
+  if(!results)return`<div class="loading"><div class="spinner"></div> Memuat…</div>`;
+  const{pc,hc,total}=results;
+  if(total===0)return`<div class="no-results" style="padding:32px 0">Belum ada vote. Jadilah yang pertama!</div>`;
+
+  if(tab==='gap'){
+    const gapped=SONGS.map(s=>({
+      ...s,
+      hp:((hc[s.id]||0)/total)*100,
+      pp:((pc[s.id]||0)/total)*100,
+      gap:(((hc[s.id]||0)-(pc[s.id]||0))/total)*100
+    })).filter(s=>s.hp>0&&s.gap>0).sort((a,b)=>b.gap-a.gap).slice(0,15);
+    if(!gapped.length)return`<div class="no-results" style="padding:24px 0">Belum ada cukup data untuk analisis.</div>`;
+    return`<div class="gap-desc">Lagu yang <strong style="color:#C084FC">lebih banyak diharap</strong> dibanding diprediksi — gap antara hati dan kepala fans.</div>`+
+    gapped.map((s,i)=>`
+      <div class="result-item ${i<3?'top3':''}">
+        <span class="rank rn" style="color:#C084FC">#${i+1}</span>
+        <div class="result-info">
+          <div class="result-title">${esc(s.song)}</div>
+          <div class="gap-detail">
+            <span class="gap-pred">Prediksi ${Math.round(s.pp)}%</span>
+            <span class="gap-harap">Harapan ${Math.round(s.hp)}%</span>
+          </div>
+        </div>
+        <span class="gap-tag">+${Math.round(s.gap)}%</span>
+      </div>`).join('');
+  }
+
+  const counts=tab==='p'?pc:hc;
+  const color=tab==='p'?'#B0143C':'#3B82F6';
+  const ranked=SONGS.map(s=>({...s,cnt:counts[s.id]||0,pct:((counts[s.id]||0)/total)*100}))
+    .filter(s=>s.cnt>0).sort((a,b)=>b.cnt-a.cnt);
+  if(!ranked.length)return`<div class="no-results" style="padding:24px 0">Belum ada data.</div>`;
+  const maxPct=ranked[0].pct||1;
+  return ranked.map((s,i)=>{
+    const rankClass=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    return`<div class="result-item ${i<3?'top3':''}">
+      <span class="rank ${rankClass}">#${i+1}</span>
+      <div class="result-info">
+        <div class="result-title">${esc(s.song)}</div>
+        <div class="result-mem">${esc(s.members)}</div>
+      </div>
+      <div class="bar-wrap"><div class="bar" style="width:${(s.pct/maxPct)*100}%;background:${color}"></div></div>
+      <span class="pct">${Math.round(s.pct)}%</span>
+      <span class="cnt">(${s.cnt})</span>
+    </div>`;
+  }).join('');
+}
+
+function render(){
+  const app=e('app');
+  if(st.step==='intro'){
+    app.innerHTML=`
+      <div class="hero">
+        <span class="badge">FIGHT! × REQUEST HOUR 2026</span>
+        <h1>Setlist Survey · Prediksi & Harapan</h1>
+        <div class="accent">Satu Suara, Satu Hak yang Sama</div>
+        <p>Dari 52 lagu yang didukung resmi, menurutmu mana yang masuk <strong>Setlist Best 40</strong>?
+        Dan mana yang paling kamu <em>harap</em> tampil di panggung?<br><br>
+        Kamu punya <strong>10 suara prediksi</strong> dan <strong>3 suara harapan</strong> — setara, tanpa faktor uang.</p>
+        <div class="hero-btns">
+          <button class="btn-red" onclick="st.step='voting';st.vStep=0;render()">${st.loading?'Memuat…':'Mulai Vote →'}</button>
+          <button class="btn-ghost" onclick="loadResults()">${st.loading?'Memuat…':'Lihat Hasil'}</button>
+        </div>
+        ${st.voted?'<div class="notice">✓ Kamu sudah vote sebelumnya. Kamu bisa vote ulang atau lihat hasil.</div>':''}
+      </div>
+      <div class="footer-credit">Survey independen oleh <span>@damnminica</span> · Data prediksi, bukan hasil resmi · JKT48 Request Hour 2026</div>`;
+    return;
+  }
+
+  if(st.step==='voting'){
+    const isP=st.vStep===0;
+    const curSet=isP?st.P:st.H;
+    const maxV=isP?MAX_P:MAX_H;
+    const color=isP?'#B0143C':'#3B82F6';
+    const label=isP?'Prediksi':'Harapan';
+    const selClass=isP?'sel-p':'sel-h';
+    app.innerHTML=`
+      ${renderStepBar(st.vStep)}
+      <div class="section">
+        <h2>${label}</h2>
+        <div class="sub">${isP
+          ?'Menurutmu, lagu mana yang akan masuk Setlist Best 40?'
+          :'Lagu mana yang paling kamu harap tampil, terlepas dari prediksimu?'}</div>
+        <span class="counter" style="background:${curSet.size>=maxV?color+'22':'#2A1520'};border-color:${curSet.size>=maxV?color:'#3D1A26'};color:${curSet.size>=maxV?color:'#9CA3AF'}">${curSet.size}/${maxV} dipilih</span>
+        <div class="search">
+          <span style="color:#9CA3AF;font-size:13px;margin-right:7px">⌕</span>
+          <input placeholder="Cari lagu atau member…" value="${esc(st.q)}" oninput="st.q=this.value;render()" id="sq">
+          ${st.q?'<button class="clear" onclick="st.q=\'\';render()">×</button>':''}
+        </div>
+        <div class="song-list">${renderSongList(selClass,curSet,maxV)}</div>
+      </div>
+      <div class="footer">
+        <button class="btn-ghost btn-sm" onclick="${isP?"st.step='intro'":'st.vStep=0'};render()">← Kembali</button>
+        ${isP
+          ?`<button class="btn-red btn-sm" ${st.P.size===0?'disabled':''} onclick="st.vStep=1;render()">Lanjut ke Harapan →</button>`
+          :`<button class="btn-red btn-sm" ${st.loading?'disabled':''} onclick="submitVote()">${st.loading?'Menyimpan…':'Submit Vote ✓'}</button>`}
+      </div>`;
+    const sq=e('sq');if(sq)sq.focus();
+    return;
+  }
+
+  if(st.step==='results'){
+    const total=st.results?.total||0;
+    app.innerHTML=`
+      <div class="hero">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div>
+            <span class="badge">Hasil Survey Live</span>
+            <h1>Request Hour 2026 · Suara Komunitas</h1>
+          </div>
+          <button class="btn-ghost btn-sm" onclick="st.step='intro';render()">← Kembali</button>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-num">${total}</div><div class="stat-lbl">Total Voter</div></div>
+          <div class="stat"><div class="stat-num" style="color:#B0143C">${MAX_P}</div><div class="stat-lbl">Suara Prediksi/orang</div></div>
+          <div class="stat"><div class="stat-num" style="color:#818CF8">${MAX_H}</div><div class="stat-lbl">Suara Harapan/orang</div></div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab ${st.tab==='p'?'active-p':''}" onclick="st.tab='p';render()">Prediksi</button>
+        <button class="tab ${st.tab==='h'?'active-h':''}" onclick="st.tab='h';render()">Harapan</button>
+        <button class="tab ${st.tab==='gap'?'active-g':''}" onclick="st.tab='gap';render()">Dark Horses</button>
+        <button class="btn-ghost btn-sm" style="margin-left:auto" onclick="loadResults()">↻ Refresh</button>
+      </div>
+      ${renderResults(st.tab,st.results)}
+      ${!st.voted?`<div class="hero" style="margin-top:10px;text-align:center">
+        <div style="font-size:12px;color:#9CA3AF;margin-bottom:10px">Kamu belum vote.</div>
+        <button class="btn-red" onclick="st.step='voting';st.vStep=0;render()">Vote Sekarang →</button>
+      </div>`:''}
+      <div class="footer-credit" style="margin-top:12px">Survey independen · <span>@damnminica</span> · Bukan hasil resmi JKT48 Request Hour 2026</div>`;
+  }
+}
+
+function handleToggle(id){
+  const isP=st.step==='voting'&&st.vStep===0;
+  if(isP) st.P=toggle(st.P,id,MAX_P);
+  else st.H=toggle(st.H,id,MAX_H);
+  render();
+}
+
+init();
+</script>
+</body>
+</html>
