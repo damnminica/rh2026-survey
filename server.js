@@ -51,6 +51,7 @@ app.get('/api/check/:vid',(req,res)=>{
 app.post('/api/vote',(req,res)=>{
   const{vid,p,h}=req.body;
   if(!vid||vid.length>64)return res.status(400).json({error:'invalid_id'});
+  if(votes[vid])return res.status(409).json({error:'already_voted'});
   const err=validate(p,h);
   if(err)return res.status(400).json({error:err});
   votes[vid]={p,h,t:Date.now()};
