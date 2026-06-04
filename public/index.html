@@ -255,7 +255,10 @@ document.addEventListener('click',function(e){
     else if(Object.keys(st.harapan).length<MAX_H)st.harapan[code]=1;
     render();
   }
-  if(action==='btn-start'){st.step='voting';st.vStep=0;render();}
+  if(action==='btn-start'){
+    if(st.voted){loadResults();return;}
+    st.step='voting';st.vStep=0;render();
+  }
   if(action==='btn-results'){loadResults();}
   if(action==='btn-back-intro'){st.step='intro';render();}
   if(action==='btn-back-pred'){st.vStep=0;render();}
@@ -330,7 +333,15 @@ async function submitVote(){
       body:JSON.stringify({vid:st.vid,p:st.prediksi,h:Object.keys(st.harapan)})});
     st.results=r.results||await api('/api/results');
     st.voted=true;st.step='results';
-  }catch(e){alert('Gagal: '+e.message);}
+  }catch(e){
+    if(e.message.includes('already_voted')){
+      st.voted=true;
+      st.results=await api('/api/results');
+      st.step='results';
+    } else {
+      alert('Gagal: '+e.message);
+    }
+  }
   st.loading=false;render();
 }
 
@@ -420,10 +431,10 @@ function render(){
         '<p>Distribusikan <strong>10 suara prediksi</strong> ke lagu yang menurutmu akan masuk Setlist Best 40. '+
         'Pilih juga lagu <strong>harapan</strong> dari 419 lagu yang bisa divote di RH2026.</p>'+
         '<div class="row" style="margin-top:14px">'+
-          '<button class="btn-red" data-action="btn-start">Mulai Vote &rarr;</button>'+
+          (!st.voted?'<button class="btn-red" data-action="btn-start">Mulai Vote &rarr;</button>':'')+
           '<button class="btn-ghost" data-action="btn-results">Lihat Hasil</button>'+
         '</div>'+
-        (st.voted?'<div class="notice">&#10003; Kamu sudah vote sebelumnya.</div>':'')+
+        (st.voted?'<div class="notice">&#10003; Kamu sudah vote. Terima kasih!</div>':'')+
       '</div>'+
       '<div class="credit">Survey independen oleh <span>@damnminica</span> &middot; Bukan hasil resmi &middot; JKT48 Request Hour 2026</div>';
     return;
