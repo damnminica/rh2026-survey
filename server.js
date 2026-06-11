@@ -19,14 +19,18 @@ app.use(express.json({limit:'50kb'}));
 app.use(express.static(path.join(__dirname,'public')));
 
 // Rate limiter: maks 3 vote per IP per 10 menit
-// Cukup untuk shared IP (kantor/sekolah), tapi blok skrip (~47 req/menit)
 const voteLimiter=rateLimit({
   windowMs:10*60*1000,
   max:3,
   message:{error:'Terlalu banyak request dari IP ini, coba lagi nanti.'},
   standardHeaders:true,
   legacyHeaders:false,
-  keyGenerator:(req)=>req.ip, // pakai IP dari x-forwarded-for (sudah di-trust proxy)
+  keyGenerator:(req)=>req.ip,
+  // Skip rate limit untuk localhost (dipakai saat admin reload)
+  skip:(req)=>{
+    const ip=req.ip||'';
+    return ip==='127.0.0.1'||ip==='::1'||ip.includes('127.0.0.1');
+  },
 });
 app.use('/api/vote',voteLimiter);
 
@@ -78,5 +82,16 @@ app.post('/api/vote',(req,res)=>{
 });
 app.get('/api/results',(req,res)=>res.json(agg()));
 app.get('/api/stats',(req,res)=>res.json({total:Object.keys(votes).length}));
+// Admin: reload votes dari disk (hanya dari localhost atau dengan secret key)
+const RELOAD_KEY=process.env.RELOAD_KEY||'rh2026-reload-secret';
+app.get('/admin/reload',(req,res)=>{
+  const fromLocal=req.ip==='127.0.0.1'||req.ip==='::1'||req.ip.includes('127.0.0.1');
+  if(!fromLocal&&req.query.key!==RELOAD_KEY)return res.status(403).json({error:'forbidden'});
+  const before=Object.keys(votes).length;
+  load();
+  const after=Object.keys(votes).length;
+  console.log(`[reload] ${before} -> ${after} votes`);
+  res.json({ok:true,before,after});
+});
 app.get('*',(req,res)=>res.sendFile(path.join(__dirname,'public','index.html')));
 app.listen(PORT,()=>console.log('[server] port',PORT));
